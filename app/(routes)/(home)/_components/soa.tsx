@@ -112,7 +112,7 @@ export function SOASection({ data }: SOASectionProps) {
   return (
     <div className="space-y-6">
       <Card className="border-slate-200 bg-white shadow-sm">
-        <CardHeader className="text-white">
+        <CardHeader className="">
           <CardTitle className="flex justify-between items-center text-black">
             <span>Due Amount by Category</span>
             <div className="flex gap-2">
@@ -121,8 +121,8 @@ export function SOASection({ data }: SOASectionProps) {
                 size="sm"
                 onClick={() => setFilterPeriod('Total')}
                 className={filterPeriod === 'Total' 
-                  ? 'bg-slate-700 text-white hover:bg-slate-100' 
-                  : 'border-slate-300 text-white hover:bg-slate-800 hover:text-white bg-transparent'
+                  ? 'bg-slate-800 text-white hover:bg-slate-100' 
+                  : 'border-slate-300 text-slate-300 hover:bg-slate-800 hover:text-white bg-transparent'
                 }
               >
                 Total
@@ -132,8 +132,8 @@ export function SOASection({ data }: SOASectionProps) {
                 size="sm"
                 onClick={() => setFilterPeriod('YTD')}
                 className={filterPeriod === 'YTD' 
-                  ? 'bg-slate-700 text-white hover:bg-slate-100' 
-                  : 'border-slate-300 text-black hover:bg-slate-800 hover:text-white bg-transparent'
+                  ? 'bg-slate-800 text-white hover:bg-slate-100' 
+                  : 'border-slate-300 text-slate-300 hover:bg-slate-800 hover:text-white bg-transparent'
                 }
               >
                 YTD
@@ -143,8 +143,8 @@ export function SOASection({ data }: SOASectionProps) {
                 size="sm"
                 onClick={() => setFilterPeriod('MTD')}
                 className={filterPeriod === 'MTD' 
-                  ? 'bg-slate-700 text-white hover:bg-slate-100' 
-                  : 'border-slate-300 text-black hover:bg-slate-800 hover:text-white bg-transparent'
+                  ? 'bg-slate-800 text-white hover:bg-slate-100' 
+                  : 'border-slate-300 text-slate-300 hover:bg-slate-800 hover:text-white bg-transparent'
                 }
               >
                 MTD
@@ -195,19 +195,29 @@ export function SOASection({ data }: SOASectionProps) {
       </Card>
 
       <Card className="border-slate-200 bg-white shadow-sm">
-        <CardHeader className=" text-white">
+        <CardHeader className="">
           <CardTitle className="text-black">Collection</CardTitle>
         </CardHeader>
         <CardContent className="pt-6">
+          <div className="flex justify-end mb-3">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowInKWD(!showInKWD)}
+              className="border-slate-300 text-slate-700 hover:bg-slate-100"
+            >
+              {showInKWD ? 'Show in USD' : 'Show in KWD'}
+            </Button>
+          </div>
           <div className="border-2 border-slate-200 rounded-md bg-white">
             <ScrollArea className="h-[400px] w-full">
               <div className="overflow-x-auto">
                 <table className="w-full border-collapse">
                   <thead>
-                    <tr className="bg-slate-100 text-black hover:bg-slate-900">
-                      <th className="p-4 text-left font-semibold whitespace-nowrap border-b border-slate-200">Type</th>
-                      <th className="p-4 text-right font-semibold whitespace-nowrap border-b border-slate-200">Amount</th>
-                      <th className="p-4 text-left font-semibold whitespace-nowrap border-b border-slate-200">Year/Month</th>
+                    <tr className="bg-slate-100 hover:bg-slate-100">
+                      <th className="p-4 text-left font-semibold text-slate-900 whitespace-nowrap border-b border-slate-200">Type</th>
+                      <th className="p-4 text-right font-semibold text-slate-900 whitespace-nowrap border-b border-slate-200">Amount</th>
+                      <th className="p-4 text-left font-semibold text-slate-900 whitespace-nowrap border-b border-slate-200">Year/Month</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -223,7 +233,12 @@ export function SOASection({ data }: SOASectionProps) {
                               {item.type}
                             </span>
                           </td>
-                          <td className="p-4 text-right font-semibold text-slate-900 whitespace-nowrap">{formatCurrency(item.amount)}</td>
+                          <td className="p-4 text-right font-semibold text-slate-900 whitespace-nowrap">
+                            <div>{formatCurrency(item.amount, showInKWD)}</div>
+                            {showInKWD && (
+                              <div className="text-xs text-slate-500">{formatCurrency(item.amount, false)}</div>
+                            )}
+                          </td>
                           <td className="p-4 text-slate-600 whitespace-nowrap">{getMonthName(monthNameToNumber[item.month])} {item.year}</td>
                         </tr>
                       ))
@@ -242,6 +257,7 @@ export function SOASection({ data }: SOASectionProps) {
           
           <div className="text-sm text-slate-500 mt-4">
             Showing {filteredData.length} of {data.length} entries for period: {getPeriodText()}
+            {showInKWD && <span className="ml-2">(Rate: 1 USD = {USD_TO_KWD_RATE} KWD)</span>}
           </div>
         </CardContent>
       </Card>
