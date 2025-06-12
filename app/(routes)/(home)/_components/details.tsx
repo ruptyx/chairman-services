@@ -41,7 +41,7 @@ export function PaymentSchedule({}: PaymentScheduleProps) {
     const bankInterest = shipmentAmount * monthlyInterestRate;
     
     // Markup percentage (20.2% as specified)
-    const markupPercentage = 0.202;
+    const markupPercentage = 0.32;
     const markupAmount = shipmentAmount * markupPercentage;
     
     return {
