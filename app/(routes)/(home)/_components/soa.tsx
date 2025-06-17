@@ -196,7 +196,7 @@ export function SOASection({ data }: SOASectionProps) {
 
       <Card className="border-slate-200 bg-white shadow-sm">
         <CardHeader className="">
-          <CardTitle className="text-black">Collection</CardTitle>
+          <CardTitle className="text-black">Dues by Invoices</CardTitle>
         </CardHeader>
         <CardContent className="pt-6">
           <div className="flex justify-end mb-3">
