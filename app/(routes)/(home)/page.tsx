@@ -1,7 +1,7 @@
 // app/page.tsx (Server Component)
 
-import { PaymentSchedule } from "@/app/(routes)/(home)/_components/details";
 import { OutstandingBalanceSection } from "@/app/(routes)/(home)/_components/outstanding-balance";
+import AllerganPaymentSchedule from "@/app/(routes)/(home)/_components/payment-schedule";
 import { SOASection } from "@/app/(routes)/(home)/_components/soa";
 import { getOutstandingBalances, getSOAEntries, getStatements } from "@/data";
 
@@ -39,7 +39,7 @@ export default async function AllerganBalancePage() {
         {/* Full Width Payment Schedule Section */}
         <div className="mt-12">
           <h2 className="text-2xl font-semibold mb-4 text-slate-900">Payment Schedule</h2>
-          <PaymentSchedule />
+          <AllerganPaymentSchedule />
         </div>
       </div>
     </div>
