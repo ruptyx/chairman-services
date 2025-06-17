@@ -36,7 +36,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
       })
       if (error) throw error
       // Update this route to redirect to an authenticated route. The user already has an active session.
-      router.push('/protected')
+      router.push('/')
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : 'An error occurred')
     } finally {
@@ -66,10 +66,10 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
                 />
               </div>
               <div className="grid gap-2">
-
                 <Input
                   id="password"
                   type="password"
+                  placeholder='********'
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -80,7 +80,6 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
                 {isLoading ? 'Logging in...' : 'Login'}
               </Button>
             </div>
-            
           </form>
         </CardContent>
       </Card>
