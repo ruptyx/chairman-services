@@ -3,6 +3,7 @@
 import { OutstandingBalanceSection } from "@/app/(routes)/(home)/_components/outstanding-balance";
 import AllerganPaymentSchedule from "@/app/(routes)/(home)/_components/payment-schedule";
 import { SOASection } from "@/app/(routes)/(home)/_components/soa";
+import { SessionWarningModal } from "@/components/ActivityProvider";
 import { getOutstandingBalances, getSOAEntries, getStatements } from "@/data";
 
 export default async function AllerganBalancePage() {
@@ -40,6 +41,10 @@ export default async function AllerganBalancePage() {
         <div className="mt-12">
           <h2 className="text-2xl font-semibold mb-4 text-slate-900">Payment Schedule</h2>
           <AllerganPaymentSchedule />
+                  <SessionWarningModal 
+          timeoutMs={30 * 1000} // 20 seconds total for testing
+          warningMs={10 * 1000} // Show warning at 10 seconds (halfway)
+        />
         </div>
       </div>
     </div>
