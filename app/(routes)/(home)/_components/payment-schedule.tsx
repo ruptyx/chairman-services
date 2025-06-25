@@ -22,7 +22,7 @@ export default function AllerganPaymentSchedule() {
     "CN for BOTOX COMISSION 5%",
     "PAYMENT FOR BOTOX LC",
     "PAYMENT FOR FILLERS LC",
-    "Paid to allergan to close 800k",
+    "Paid to allergan to close 1M",
     "TOTAL TO BE PAID TO BANK FOR AA & BOTOX LC",
     "TOTAL DUES FOR ALLERGAN & BANK"
   ];
@@ -196,27 +196,26 @@ export default function AllerganPaymentSchedule() {
       "Nov-26": 841695.96,
       "Dec-26": 841695.96,
     },
-    
-  "Paid to allergan to close 800k": {
-    "Jul-25": 432384.84,
-    "Aug-25": 507379.84,
-    "Sep-25": 488631.09,
-    "Oct-25": 488631.09,
-    "Nov-25": 523691.67,
-    "Dec-25": 523691.67,
-    "Jan-26": 520589.67,
-    "Feb-26": 520589.67,
-    "Mar-26": 549394.38,
-    "Apr-26": 549394.38,
-    "May-26": 551329.89,
-    "Jun-26": 551329.89,
-    "Jul-26": 610566.46,
-    "Aug-26": 610566.46,
-    "Sep-26": 612598.10,
-    "Oct-26": 612598.10,
-    "Nov-26": 799941.11,
-    "Dec-26": 799941.11
-  },
+    "Paid to allergan to close 1M": {
+      "Jul-25": 432384.84,
+      "Aug-25": 507379.84,
+      "Sep-25": 488631.09,
+      "Oct-25": 488631.09,
+      "Nov-25": 523691.67,
+      "Dec-25": 523691.67,
+      "Jan-26": 520589.67,
+      "Feb-26": 520589.67,
+      "Mar-26": 549394.38,
+      "Apr-26": 549394.38,
+      "May-26": 551329.89,
+      "Jun-26": 551329.89,
+      "Jul-26": 610566.46,
+      "Aug-26": 610566.46,
+      "Sep-26": 612598.10,
+      "Oct-26": 612598.10,
+      "Nov-26": 799941.11,
+      "Dec-26": 799941.11
+    },
     "TOTAL TO BE PAID TO BANK FOR AA & BOTOX LC": {
       "Jul-25": 374975.00,
       "Aug-25": 374975.00,
@@ -237,26 +236,26 @@ export default function AllerganPaymentSchedule() {
       "Nov-26": 1199367.92,
       "Dec-26": 1199367.92,
     },
-"TOTAL DUES FOR ALLERGAN & BANK": {
-    "Jul-25": 807359.84,
-    "Aug-25": 882354.84,
-    "Sep-25": 863606.09,
-    "Oct-25": 863606.09,
-    "Nov-25": 898666.67,
-    "Dec-25": 898666.67,
-    "Jan-26": 1862635.67,
-    "Feb-26": 1862635.67,
-    "Mar-26": 1953480.33,
-    "Apr-26": 1953480.33,
-    "May-26": 1886587.82,
-    "Jun-26": 1886587.82,
-    "Jul-26": 1907114.18,
-    "Aug-26": 1907114.18,
-    "Sep-26": 1852598.80,
-    "Oct-26": 1852598.80,
-    "Nov-26": 1999309.03,
-    "Dec-26": 1999309.03
-  }
+    "TOTAL DUES FOR ALLERGAN & BANK": {
+      "Jul-25": 807359.84,
+      "Aug-25": 882354.84,
+      "Sep-25": 863606.09,
+      "Oct-25": 863606.09,
+      "Nov-25": 898666.67,
+      "Dec-25": 898666.67,
+      "Jan-26": 1862635.67,
+      "Feb-26": 1862635.67,
+      "Mar-26": 1953480.33,
+      "Apr-26": 1953480.33,
+      "May-26": 1886587.82,
+      "Jun-26": 1886587.82,
+      "Jul-26": 1907114.18,
+      "Aug-26": 1907114.18,
+      "Sep-26": 1852598.80,
+      "Oct-26": 1852598.80,
+      "Nov-26": 1999309.03,
+      "Dec-26": 1999309.03
+    }
   };
 
   const [data, setData] = useState<PaymentData>(initialData);
@@ -265,7 +264,8 @@ export default function AllerganPaymentSchedule() {
   const formatCurrency = (value: number | undefined) => {
     if (value === undefined || value === 0) return '-';
     return new Intl.NumberFormat('en-US', {
-      style: 'decimal',
+      style: 'currency',
+      currency: 'USD',
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(value);
@@ -287,7 +287,7 @@ export default function AllerganPaymentSchedule() {
       
       // Calculate TOTAL DUES FOR ALLERGAN & BANK
       const totalToPay = botoxLC + fillersLC;
-      const paidToAllergan = updatedData["Paid to allergan to close 800k"]?.[month] || 0;
+      const paidToAllergan = updatedData["Paid to allergan to close 1M"]?.[month] || 0;
       
       if (!updatedData["TOTAL DUES FOR ALLERGAN & BANK"]) {
         updatedData["TOTAL DUES FOR ALLERGAN & BANK"] = {};
@@ -378,7 +378,3 @@ export default function AllerganPaymentSchedule() {
     </div>
   );
 }
-
-
-
-

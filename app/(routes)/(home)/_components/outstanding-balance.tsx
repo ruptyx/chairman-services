@@ -68,6 +68,8 @@ const creditNoteDetails = [
   { description: "DESTRUCTION 25013/25019/25020/25021/25035", amount: 8046.37 },
   { description: "DESTRUCTION 24100", amount: 478.37 },
   { description: "DESTRUCTION MOH 24084", amount: 411.85 },
+  { description: "Demurrage charges for shipment INV#9074588 BOTOX LC", amount: 333.72 },
+  { description: "MOH release samples closing 2024", amount: 10636.67 },
 ];
 
 export function OutstandingBalanceSection({ data, statements }: OutstandingBalanceSectionProps) {
@@ -113,8 +115,8 @@ export function OutstandingBalanceSection({ data, statements }: OutstandingBalan
   };
 
   return (
-    <div className="space-y-6">
-      {/* Allergan Outstandings Card */}
+    <>
+      {/* Allergan Outstandings Card - Keep original */}
       <Card className="border-slate-200 bg-white shadow-sm">
         <CardHeader className=" text-black">
           <CardTitle className="text-black">Allergan Outstandings</CardTitle>
@@ -156,45 +158,59 @@ export function OutstandingBalanceSection({ data, statements }: OutstandingBalan
           </div>
         </CardContent>
       </Card>
+    </>
+  );
+}
 
-      {/* Credit Note Details Table */}
-      <Card className="border-slate-200 bg-white shadow-sm">
-        <CardHeader>
-          <CardTitle className="text-black">Credit Note Details</CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <div className="overflow-hidden">
-            <div className="overflow-x-auto max-h-[400px] overflow-y-auto border border-slate-200 rounded-lg">
-              <table className="w-full text-sm">
-                <thead className="sticky top-0 z-10 bg-white">
-                  <tr className="border-b border-slate-200">
-                    <th className="px-4 py-3 text-left font-semibold text-slate-900 bg-white">Description</th>
-                    <th className="px-4 py-3 text-right font-semibold text-slate-900 min-w-[150px] bg-white">USD Amount</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {creditNoteDetails.map((item, index) => (
-                    <tr key={index} className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
-                      <td className="px-4 py-3 text-slate-700">{item.description}</td>
-                      <td className="px-4 py-3 text-right font-medium text-slate-900">
-                        {formatUSD(item.amount)}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-                <tfoot className="sticky bottom-0 z-10">
-                  <tr className="border-t-2 border-slate-300 bg-slate-100">
-                    <td className="px-4 py-3 font-bold text-slate-900 bg-slate-100">Total</td>
-                    <td className="px-4 py-3 text-right font-bold text-slate-900 bg-slate-100">
-                      {formatUSD(creditNoteTotal)}
+// Separate component for Credit Note Details that will span full width
+export function CreditNoteDetails() {
+  const creditNoteTotal = creditNoteDetails.reduce((sum, item) => sum + item.amount, 0);
+
+  const formatUSD = (amount: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2,
+    }).format(amount);
+  };
+
+  return (
+    <Card className="border-slate-200 bg-white shadow-sm">
+      <CardHeader>
+        <CardTitle className="text-black">Credit Note Details</CardTitle>
+      </CardHeader>
+      <CardContent className="pt-6">
+        <div className="overflow-hidden">
+          <div className="overflow-x-auto max-h-[400px] overflow-y-auto border border-slate-200 rounded-lg">
+            <table className="w-full text-sm">
+              <thead className="sticky top-0 z-10 bg-white">
+                <tr className="border-b border-slate-200">
+                  <th className="px-4 py-3 text-left font-semibold text-slate-900 bg-white">Description</th>
+                  <th className="px-4 py-3 text-right font-semibold text-slate-900 min-w-[150px] bg-white">USD Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                {creditNoteDetails.map((item, index) => (
+                  <tr key={index} className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                    <td className="px-4 py-3 text-slate-700">{item.description}</td>
+                    <td className="px-4 py-3 text-right font-medium text-slate-900">
+                      {formatUSD(item.amount)}
                     </td>
                   </tr>
-                </tfoot>
-              </table>
-            </div>
+                ))}
+              </tbody>
+              <tfoot className="sticky bottom-0 z-10">
+                <tr className="border-t-2 border-slate-300 bg-slate-100">
+                  <td className="px-4 py-3 font-bold text-slate-900 bg-slate-100">Total</td>
+                  <td className="px-4 py-3 text-right font-bold text-slate-900 bg-slate-100">
+                    {formatUSD(creditNoteTotal)}
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
           </div>
-        </CardContent>
-      </Card>
-    </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 }

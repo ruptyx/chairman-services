@@ -1,8 +1,10 @@
 // app/page.tsx (Server Component)
 
-import { OutstandingBalanceSection } from "@/app/(routes)/(home)/_components/outstanding-balance";
+import { OutstandingBalanceSection, CreditNoteDetails } from "@/app/(routes)/(home)/_components/outstanding-balance";
 import AllerganPaymentSchedule from "@/app/(routes)/(home)/_components/payment-schedule";
 import { SOASection } from "@/app/(routes)/(home)/_components/soa";
+import { CurrencyStock } from "@/app/(routes)/(home)/_components/currency-stock";
+import { MonthlySales } from "@/app/(routes)/(home)/_components/monthly-sales";
 import { SessionWarningModal } from "@/components/ActivityProvider";
 import { getOutstandingBalances, getSOAEntries, getStatements } from "@/data";
 
@@ -24,6 +26,7 @@ export default async function AllerganBalancePage() {
           </p>
         </div>
 
+        {/* Two cards side by side */}
         <div className="grid gap-8 lg:grid-cols-2 mb-8">
           <div>
             <h2 className="text-2xl font-semibold mb-4 text-slate-900">Outstanding Balance</h2>
@@ -32,19 +35,37 @@ export default async function AllerganBalancePage() {
 
           <div>
             <h2 className="text-2xl font-semibold mb-4 text-slate-900">Statement of Account</h2>
-        {/* @ts-ignore */}
+            {/* @ts-ignore */}
             <SOASection data={soaEntries} />
           </div>
+        </div>
+
+        {/* Full-width Credit Note Details */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-semibold mb-4 text-slate-900">Financial Details</h2>
+          <CreditNoteDetails />
+        </div>
+
+        {/* Currency Stock Section */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-semibold mb-4 text-slate-900">Inventory Overview</h2>
+          <CurrencyStock />
+        </div>
+
+        {/* Monthly Sales Section */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-semibold mb-4 text-slate-900">Sales Analysis</h2>
+          <MonthlySales />
         </div>
 
         {/* Full Width Payment Schedule Section */}
         <div className="mt-12">
           <h2 className="text-2xl font-semibold mb-4 text-slate-900">Payment Schedule</h2>
           <AllerganPaymentSchedule />
-                  <SessionWarningModal 
-          timeoutMs={30 * 1000} // 20 seconds total for testing
-          warningMs={10 * 1000} // Show warning at 10 seconds (halfway)
-        />
+          <SessionWarningModal 
+            timeoutMs={30 * 1000} // 20 seconds total for testing
+            warningMs={10 * 1000} // Show warning at 10 seconds (halfway)
+          />
         </div>
       </div>
     </div>
