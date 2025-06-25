@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { TrendingUp, Calendar, DollarSign } from 'lucide-react';
+import { TrendingUp, Calendar, DollarSign, ArrowLeftRight } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
 
 interface SalesData {
@@ -19,9 +19,13 @@ interface SalesData {
 
 export function MonthlySales() {
   const [showChart, setShowChart] = useState(true);
+  const [currency, setCurrency] = useState<'KWD' | 'USD'>('KWD');
+  
+  // Conversion rate
+  const KWD_TO_USD = 3.27;
 
-  // Sales data
-  const salesData: SalesData[] = [
+  // Original sales data in KWD
+  const salesDataKWD: SalesData[] = [
     {
       category: "Agn aesthetic Botox",
       'Jan-25': 194193.43,
@@ -84,8 +88,25 @@ export function MonthlySales() {
     }
   ];
 
+  // Convert data based on selected currency
+  const convertValue = (value: number) => {
+    return currency === 'USD' ? value * KWD_TO_USD : value;
+  };
+
+  // Get sales data in current currency
+  const salesData: SalesData[] = salesDataKWD.map(item => ({
+    ...item,
+    'Jan-25': convertValue(item['Jan-25']),
+    'Feb-25': convertValue(item['Feb-25']),
+    'Mar-25': convertValue(item['Mar-25']),
+    'Apr-25': convertValue(item['Apr-25']),
+    'May-25': convertValue(item['May-25']),
+    'Jun-25': convertValue(item['Jun-25']),
+    total: convertValue(item.total)
+  }));
+
   // Calculate grand totals for each month
-  const monthlyTotals = {
+  const monthlyTotalsKWD = {
     'Jan-25': 620399.93,
     'Feb-25': 344346.30,
     'Mar-25': 481469.84,
@@ -94,13 +115,17 @@ export function MonthlySales() {
     'Jun-25': 146418.75,
   };
 
-  const grandTotal = 2136570.63;
+  const monthlyTotals = Object.fromEntries(
+    Object.entries(monthlyTotalsKWD).map(([key, value]) => [key, convertValue(value)])
+  );
+
+  const grandTotal = convertValue(2136570.63);
 
   // Format currency
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'USD',
+      currency: currency,
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(value);
@@ -116,13 +141,22 @@ export function MonthlySales() {
   };
 
   // Prepare data for charts
-  const chartData = Object.entries(monthlyTotals).map(([month, total]) => ({
-    month: month.replace('-25', ''),
-    total: total,
-    botox: salesData.find(d => d.category === "Agn aesthetic Botox")?.[month as keyof typeof monthlyTotals] || 0,
-    fillers: salesData.find(d => d.category === "Agn aesthetic Fillers")?.[month as keyof typeof monthlyTotals] || 0,
-    other: total - (salesData.find(d => d.category === "Agn aesthetic Botox")?.[month as keyof typeof monthlyTotals] || 0) - (salesData.find(d => d.category === "Agn aesthetic Fillers")?.[month as keyof typeof monthlyTotals] || 0)
-  }));
+  const chartData = Object.entries(monthlyTotals).map(([month, total]) => {
+    const monthKey = month as keyof Omit<SalesData, 'category' | 'total'>;
+    const botoxData = salesData.find(d => d.category === "Agn aesthetic Botox");
+    const fillersData = salesData.find(d => d.category === "Agn aesthetic Fillers");
+    
+    const botoxValue = botoxData ? botoxData[monthKey] : 0;
+    const fillersValue = fillersData ? fillersData[monthKey] : 0;
+    
+    return {
+      month: month.replace('-25', ''),
+      total: total,
+      botox: botoxValue,
+      fillers: fillersValue,
+      other: total - botoxValue - fillersValue
+    };
+  });
 
   // Calculate percentage of total for each category
   const categoryPercentages = salesData.map(item => ({
@@ -147,6 +181,11 @@ export function MonthlySales() {
     return null;
   };
 
+  // Toggle currency
+  const toggleCurrency = () => {
+    setCurrency(prev => prev === 'KWD' ? 'USD' : 'KWD');
+  };
+
   return (
     <Card className="border-slate-200 bg-white shadow-sm">
       <CardHeader>
@@ -158,6 +197,13 @@ export function MonthlySales() {
           <div className="flex items-center gap-4">
             <span className="text-sm text-slate-600">Data till June 24, 2025</span>
             <button
+              onClick={toggleCurrency}
+              className="text-sm px-3 py-1 rounded-md bg-blue-100 hover:bg-blue-200 transition-colors flex items-center gap-1"
+            >
+              <ArrowLeftRight className="w-4 h-4" />
+              {currency === 'KWD' ? 'Convert to USD' : 'Convert to KWD'}
+            </button>
+            <button
               onClick={() => setShowChart(!showChart)}
               className="text-sm px-3 py-1 rounded-md bg-slate-100 hover:bg-slate-200 transition-colors"
             >
@@ -165,6 +211,11 @@ export function MonthlySales() {
             </button>
           </div>
         </div>
+        {currency === 'USD' && (
+          <div className="mt-2 text-sm text-slate-600">
+            Exchange rate: 1 KWD = 3.27 USD
+          </div>
+        )}
       </CardHeader>
       <CardContent className="pt-6">
         {showChart ? (
@@ -175,7 +226,7 @@ export function MonthlySales() {
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="text-sm text-blue-600 mb-1">Total Botox Sales</div>
-                    <div className="text-xl font-bold text-blue-900">{formatCurrency(830835.23)}</div>
+                    <div className="text-xl font-bold text-blue-900">{formatCurrency(convertValue(830835.23))}</div>
                   </div>
                   <TrendingUp className="w-8 h-8 text-blue-500" />
                 </div>
@@ -184,7 +235,7 @@ export function MonthlySales() {
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="text-sm text-purple-600 mb-1">Total Fillers Sales</div>
-                    <div className="text-xl font-bold text-purple-900">{formatCurrency(1110261.09)}</div>
+                    <div className="text-xl font-bold text-purple-900">{formatCurrency(convertValue(1110261.09))}</div>
                   </div>
                   <TrendingUp className="w-8 h-8 text-purple-500" />
                 </div>
@@ -207,7 +258,7 @@ export function MonthlySales() {
                 <LineChart data={chartData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                   <XAxis dataKey="month" stroke="#64748b" />
-                  <YAxis stroke="#64748b" tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`} />
+                  <YAxis stroke="#64748b" tickFormatter={(value) => `${currency === 'KWD' ? 'KD' : '$'}${(value / 1000).toFixed(0)}k`} />
                   <Tooltip content={<CustomTooltip />} />
                   <Legend />
                   <Line type="monotone" dataKey="total" stroke="#3b82f6" strokeWidth={3} name="Total Sales" />
@@ -224,7 +275,7 @@ export function MonthlySales() {
                 <BarChart data={chartData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                   <XAxis dataKey="month" stroke="#64748b" />
-                  <YAxis stroke="#64748b" tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`} />
+                  <YAxis stroke="#64748b" tickFormatter={(value) => `${currency === 'KWD' ? 'KD' : '$'}${(value / 1000).toFixed(0)}k`} />
                   <Tooltip content={<CustomTooltip />} />
                   <Legend />
                   <Bar dataKey="botox" stackId="a" fill="#3b82f6" name="Botox" />
