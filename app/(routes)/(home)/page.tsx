@@ -7,7 +7,7 @@ import { CurrencyStock } from "@/app/(routes)/(home)/_components/currency-stock"
 import { MonthlySales } from "@/app/(routes)/(home)/_components/monthly-sales";
 import { SessionWarningModal } from "@/components/ActivityProvider";
 import { getOutstandingBalances, getSOAEntries, getStatements } from "@/data";
-import { SalesProfitQuantityChart } from "@/app/(routes)/(home)/_components/sales-profit";
+import { CombinedChart } from "@/app/(routes)/(home)/_components/sales-profit";
 
 export default async function AllerganBalancePage() {
   // Fetch data server-side
@@ -59,14 +59,14 @@ export default async function AllerganBalancePage() {
           <MonthlySales />
         </div>
 
-        <SalesProfitQuantityChart />
+        <CombinedChart />
 
         {/* Full Width Payment Schedule Section */}
         <div className="mt-12">
           <h2 className="text-2xl font-semibold mb-4 text-slate-900">Payment Schedule</h2>
           <AllerganPaymentSchedule />
           <SessionWarningModal 
-            timeoutMs={30 * 1000} // 20 seconds total for testing
+            timeoutMs={300 * 1000} // 20 seconds total for testing
             warningMs={10 * 1000} // Show warning at 10 seconds (halfway)
           />
         </div>
