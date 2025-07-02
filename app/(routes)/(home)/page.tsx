@@ -65,10 +65,6 @@ export default async function AllerganBalancePage() {
         <div className="mt-12">
           <h2 className="text-2xl font-semibold mb-4 text-slate-900">Payment Schedule</h2>
           <AllerganPaymentSchedule />
-          <SessionWarningModal 
-            timeoutMs={300 * 1000} // 20 seconds total for testing
-            warningMs={10 * 1000} // Show warning at 10 seconds (halfway)
-          />
         </div>
       </div>
     </div>
